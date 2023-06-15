@@ -1,0 +1,368 @@
+<meta!DOCTYPE html>
+<meta html>
+<head>
+  <title>EL UNIVERSAL | Elecciones 2023</title>
+
+<!-- Referencias -->
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <link rel="stylesheet" href="leaflet-search-master\src\leaflet-search.css"/> 
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" href="leaflet-easy-button.css" />
+  <link rel="stylesheet" href="leaflet-tag-filter-button.css" />
+  <link rel="stylesheet" href="ripple.min.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!--El enlace anterior agrega el ícono de "Home" al control de zoom-->
+
+<!--Estilos CSS -->
+
+  <style>
+    /* Estilos para la cinta superior */
+    .top-bar {
+      background-color: #fff;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .top-bar img {
+      width: 440px;
+      height: auto;
+    }
+
+  .seccion {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 700px;
+  padding: 30px;
+  }
+
+h1 {
+  color: #0069a2;
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #666;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+#map {
+      height: 960px;
+    }
+
+.leaflet-popup-content-wrapper {
+  border: none; 
+  background-color: #333; 
+  color: #ffffff; 
+  font-size: 15px; 
+  border: none;
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- Cinta superior con logo -->
+  <div class="top-bar">
+    <img src="img/logo-el-universal.svg" alt="Logo EL UNIVERSAL">
+  </div>
+
+<!-- Primer parte de texto -->
+<div class="seccion">
+<h1>Alianza Va por el Edo. Mex. incumple meta de votos</h1></br>
+
+  <p> 
+  
+    De los 3 millones 700 mil sufragios proyectados para el triunfo de Alejandra del Moral, la coalición PRI-PAN-PRD-NA únicamente logró 2 millones 755 mil 532, según el PREP
+  
+    El PRI, PAN, PRD y Nueva Alianza se comprometieron a lograr 3 millones 700 mil votos, con los cuales buscaban asegurar el triunfo de su candidata a la gubernatura, Alejandra del Moral; sin embargo, sólo obtuvieron 2 millones 755 mil 532 sufragios, según el Programa de Resultados Electorales Preliminares (PREP), del Instituto Electoral del Estado de México (IEEM), con 100% de las actas capturadas.
+    
+    Mientras, Delfina Gómez, candidata de Morena, PT y PVEM, registró 3 millones 272 mil 106 votos, posicionándose como la próxima gobernadora del Estado de México, con más de medio millón de votos más que su adversaria política.
+    
+    El 27 de marzo, en la víspera del inicio de las campañas, el dirigente estatal de PRI, Eric Sevilla, informó que la coalición Va por el Estado de México se fijó una meta de al menos 3 millones 700 mil votos para la elección.
+    
+    De acuerdo con ese comunicado, los partidos de la coalición tenían metas claras: el PRI aportaría 2 millones de votos; el PAN, un millón; PRD, 400 mil, y Nueva Alianza, 300 mil.
+    
+    Al analizar los datos que arrojó el PREP, de los 2 millones que el PRI ofreció, únicamente logró un millón 750 mil 795, casi 250 mil menos de lo comprometido.
+    
+    El PAN anunció que aportaría un millón de votos; no obstante, dirigentes estatales panistas como Anuar Azar y Enrique Vargas apuntaron en declaraciones por separado que ofrecían 800 mil sufragios, y el pasado domingo no lograron ninguna de las dos metas. De acuerdo con el PREP, se quedaron con 701 mil 573 votos, cerca de 300 mil menos de lo que esperaban los integrantes de la coalición.
+    
+    A su vez, el PRD se comprometió con 400 mil votos, pero el sol azteca solamente recibió 183 mil 227, menos de la mitad de lo ofrecido en la alianza.
+    
+    Nueva Alianza aportaría 300 mil, pero de acuerdo con el PREP, sumó 119 mil 937 votos, cifra que representa 39% de lo prometido, de acuerdo con el anuncio que realizó el dirigente del PRI.
+    
+    EL UNIVERSAL buscó a los dirigentes de los partidos políticos, pero no obtuvo respuesta.
+  
+  </p>
+</div>
+
+  <!-- Mapa Elecciones  -->
+<div id="map">
+  
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="layers/Poligonos.js"></script>
+  <script src="layers/EdMex.js"></script>
+  <script src="Leaflet-MiniMap-master/dist/Control.MiniMap.min.js"></script>
+  <script src="leaflet-search-master\src\leaflet-search.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>	
+  <script src="leaflet-easy-button.js"></script>
+  <script src="leaflet-tag-filter-button.js"></script>
+  
+  <script>
+    // Crear el mapa
+    var map = L.map('map').setView([19.4522902,-99.7476208],9.45);
+
+    // Agregar el mapa base (OpenStreetMap)
+    var CartoDB_DarkMatterNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 20
+}).addTo(map);
+
+    // Agregamos PopUp 
+
+    function popup(feature,layer){
+  if(feature.properties && feature.properties.Seccione22){
+      layer.bindPopup("<strong>Municipio: </strong>" + feature.properties.NOMGEO + 
+      "<br/>" + "<strong>Sección: </strong>" + 
+      feature.properties.SECCION+ "<br/>"+ "<br>"+
+      "<strong>Porcentaje de votación</strong>"+"<br/>"+ "<br>"+
+      "<strong>C-PVEM-PT-MORENA: </strong>"+
+       feature.properties.Seccione27+"%"+"<br/>"+
+       "<strong>C-PAN-PRI-PRD-NAEM: </strong>"+
+       feature.properties.Seccione28+"%"
+       );
+
+    layer.on('mouseover', function (e) {
+        this.openPopup(e.latlng);
+    });
+    layer.on('mouseout', function (e) {
+        this.closePopup();
+    });
+  
+  }
+}
+
+
+//Color Poligonos
+
+function getColor(d) {
+  return d == "C-PAN-PRI-PRD-NAEM" ? '#3D8E56':
+         d == "C-PVEM-PT-MORENA" ? '#A02A18' :
+         '#d8aeba';
+}
+
+
+//Mostrar Colores
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.Seccione22),
+        weight: 0.5,
+        opacity: 0.5,
+        color: 'white',
+        dashArray: '1',
+        fillOpacity: 0.7
+    };
+}
+
+
+ //Estilo división municipal
+ var myStyle = {
+    "color": "white",
+    "weight": 2.5,
+    "opacity": 1,
+    "fillColor": "Acambay"? 'transparent' : getColor("Acambay")
+};
+
+//Agregar capa división municipal
+var esdiv = L.geoJson(estado,{
+    style: myStyle,
+}).addTo(map);
+
+
+ //Agregamos Poligonos
+
+ var edoMex = L.geoJson(mexico,{
+    style: style,
+    onEachFeature: popup,
+ }).addTo(map);
+
+//Control de capas 
+
+var baseMaps = {
+    CartoDB:CartoDB_DarkMatterNoLabels
+};
+
+var overlays = {
+    Secciones : edoMex,
+    Municipios: esdiv   
+};
+
+L.control.layers(baseMaps, overlays, {
+  position: 'topright', // 'topleft', 'bottomleft', 'bottomright'
+  collapsed: false // true
+}).addTo(map);
+
+ //Añadimos control "Search"
+var searchControl = new L.Control.Search({
+    layer: edoMex,
+    propertyName: 'NOMGEO',
+    zoom: 9.5,
+    circleLocation: false 
+});
+
+
+//Definimos el estilo de control "Search"
+searchControl.on('search_locationfound', function(e) {
+    e.layer.setStyle({fillColor: '#e51a4c', color: '#e51a4c'});
+})
+.on('search_collapsed', function(e) {
+  edoMex.eachLayer(function(layer) { //restauramos el color del elemento
+    edoMex.resetStyle(layer);
+    });	
+});
+
+//Añadimos control SearchControl
+map.addControl(searchControl);
+
+
+//Bloqueamos vista de zoom
+map.dragging.disable();
+
+//
+map.scrollWheelZoom.disable();
+this.map.on('click', () => { this.map.scrollWheelZoom.enable();});
+this.map.on('mouseout', () => { this.map.scrollWheelZoom.disable();});
+
+//Agregamos botón de Inicio
+L.Control.zoomHome = L.Control.extend({
+  options: {
+      position: 'topleft',
+      zoomInText: '+',
+      zoomInTitle: 'Acercar',
+      zoomOutText: '-',
+      zoomOutTitle: 'Alejar',
+      zoomHomeText: '<i class="fa fa-home" style="line-height:1.65;"></i>',
+      zoomHomeTitle: 'Inicio'
+  },
+
+  onAdd: function (map) {
+      var controlName = 'gin-control-zoom',
+          container = L.DomUtil.create('div', controlName + ' leaflet-bar'),
+          options = this.options;
+
+      this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle,
+      controlName + '-in', container, this._zoomIn);
+      this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle,
+      controlName + '-home', container, this._zoomHome);
+      this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle,
+      controlName + '-out', container, this._zoomOut);
+
+      this._updateDisabled();
+      map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+
+      return container;
+  },
+
+  onRemove: function (map) {
+      map.off('zoomend zoomlevelschange', this._updateDisabled, this);
+  },
+
+  _zoomIn: function (e) {
+      this._map.zoomIn(e.shiftKey ? 3 : 1);
+  },
+
+  _zoomOut: function (e) {
+      this._map.zoomOut(e.shiftKey ? 3 : 1);
+  },
+
+  _zoomHome: function (e) {
+      map.setView([19.3357595,-99.309634], 9.45);
+  },
+
+  _createButton: function (html, title, className, container, fn) {
+      var link = L.DomUtil.create('a', className, container);
+      link.innerHTML = html;
+      link.href = '#';
+      link.title = title;
+
+      L.DomEvent.on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
+          .on(link, 'click', L.DomEvent.stop)
+          .on(link, 'click', fn, this)
+          .on(link, 'click', this._refocusOnMap, this);
+
+      return link;
+  },
+
+  _updateDisabled: function () {
+      var map = this._map,
+          className = 'leaflet-disabled';
+
+      L.DomUtil.removeClass(this._zoomInButton, className);
+      L.DomUtil.removeClass(this._zoomOutButton, className);
+
+      if (map._zoom === map.getMinZoom()) {
+          L.DomUtil.addClass(this._zoomOutButton, className);
+      }
+      if (map._zoom === map.getMaxZoom()) {
+          L.DomUtil.addClass(this._zoomInButton, className);
+      }
+  }
+});
+
+// Agregamos Control de Zoom
+var zoomHome = new L.Control.zoomHome();
+zoomHome.addTo(map);
+
+//Eliminamos el Control de Zoom que tiene por default Leaflet
+map.removeControl(map.zoomControl);
+
+//Agregar atribución
+map.attributionControl.addAttribution('EL UNIVERSAL - Unidad de Investigación y Datos');
+
+// Agregamos Menú
+L.control.slideMenu('<p>test</p>').addTo(map);
+
+  </script>
+
+</div>
+
+  <!-- Segunda parte de texto -->
+<div class="seccion">
+  <h1>Pierde fuerza el sol azteca</h1></br>
+
+  <p>
+
+    De los 125 municipios que conforman el Estado de México, sólo en dos de cada 10, es decir 31, la coalición del PRI, PAN, PRD y Nueva Alianza consiguió superar al partido de color guinda.
+
+A pesar de estos triunfos, únicamente en ocho municipios tuvieron una diferencia por encima de los 10 puntos, en el resto dominaron con apenas 3 mil votos más en promedio.
+
+El elemento más débil de la coalición Va por el Estado de México es de color amarillo, después de que el PRD obtuviera en la elección de 2017 más de un millón de votos, en la contienda del pasado 4 de junio apenas alcanzó los 174 mil 806 sufragios.
+
+Su fuerza en Nezahualcóyotl se evaporó. En 2017 consiguió 209 mil 528 votos, y en esta última elección apenas llegó a los 19 mil 599; perdió el liderazgo en todas las secciones electorales.
+
+Algo similar ocurrió en Ecatepec, Toluca y Chimalhuacán, regiones en donde, en promedio, perdieron 67 mil 800 votos de una elección a otra.
+  
+  </p>
+</div>
+
+
+  <!-- Créditos -->
+<div class="seccion">
+<h1>Créditos</h1>
+
+<p> Texto: Daniela Guazo </p>
+<p> Web: Samuel Aguilar - Miguel Garnica </p>
+</div>
+
+</body>
+</html>
